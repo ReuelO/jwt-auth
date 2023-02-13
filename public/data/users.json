@@ -1,10 +1,7 @@
 [
   {
-    "username": "matthew",
-    "password": "123"
-  },
-  {
-    "username": "mark",
-    "password": "111"
+    "username": "reuel",
+    "password": "123",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJldWVsIiwiaWF0IjoxNjc2MzE1NTgzLCJleHAiOjE2NzYzMTczODN9.tBpwVBR9KAFRigRAabW13R8qmBYrFMPHreGE_zcX3Yk"
   }
 ]

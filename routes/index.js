@@ -15,11 +15,9 @@ function authenticateToken(req, res, next) {
 
   jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
     console.log(err);
-
     if (err) return res.sendStatus(403);
 
     req.user = user;
-
     next();
   });
 }
@@ -36,14 +34,30 @@ router
   .post(function (req, res, next) {
     const user = req.body;
     const filePath = "./public/data/users.json";
-    let list = [];
+
+    // save user token
+    const token = generateAccessToken({ username: user.username });
+    // document.cookie = `token=${token}`;
+    user.token = token;
 
     fs.readFile(filePath, "utf8", (err, data) => {
       if (err) console.log(err);
 
-      if (data) {
+      if (!data) {
+        // create JSON file with new user
+        const list = [];
+
+        list.push(user);
+        const data = JSON.stringify(list, null, 2);
+
+        fs.writeFile(filePath, data, (err, result) => {
+          if (err) console.log(err);
+          console.log(result);
+        });
+      } else {
         const fileData = JSON.parse(data);
 
+        // check if user exists
         const object = fileData.find((obj) => obj.username === user.username);
 
         if (object) {
@@ -58,21 +72,8 @@ router
             console.log(result);
           });
         }
-      } else {
-        // create JSON with new user
-        list.push(user);
-        list = JSON.stringify(list, null, 2);
-
-        fs.writeFile(filePath, list, (err, result) => {
-          if (err) console.log(err);
-          console.log(result);
-        });
       }
     });
-
-    // const token = generateAccessToken({ username: user.username });
-    // document.cookie = `token=${token}`;
-    // res.json(token);
 
     res.redirect("/login");
   });
@@ -83,12 +84,36 @@ router
     res.render("login", { title: "Sign In" });
   })
   .post(function (req, res, next) {
-    res.render("login", { title: "Sign In" });
+    const user = req.body;
+    const filePath = "./public/data/users.json";
+
+    fs.readFile(filePath, "utf8", (err, data) => {
+      if (err) console.log(err);
+
+      if (!data) {
+        console.log("users' json file is empty or does not exist");
+      } else {
+        const fileData = JSON.parse(data);
+
+        // check if user exists
+        const object = fileData.find((obj) => obj.username === user.username);
+
+        if (!object) {
+          console.log("user not found");
+        } else {
+          // compare passwords
+          if (object.password != user.password) {
+            console.log("incorrect password");
+          } else {
+            console.log("user logged in");
+
+            res.redirect("/user");
+          }
+        }
+      }
+    });
   });
 
-router.get("/api/userOrders", authenticateToken, (req, res) => {
-  // executes after authenticateToken
-  // ...
-});
+router.use("/user", authenticateToken, require("./users"));
 
 module.exports = router;
