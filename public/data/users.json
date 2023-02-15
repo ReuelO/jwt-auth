@@ -1,7 +1,12 @@
 [
   {
-    "username": "reuel",
+    "username": "luke",
     "password": "123",
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJldWVsIiwiaWF0IjoxNjc2MzE1NTgzLCJleHAiOjE2NzYzMTczODN9.tBpwVBR9KAFRigRAabW13R8qmBYrFMPHreGE_zcX3Yk"
+    "token": "eyJhbGciOiJIUzI1NiJ9.bHVrZQ.WiHoUqgANIhAteHgEg_azrDl6R3SKh_p3gHPMDOAdoo"
+  },
+  {
+    "username": "mark",
+    "password": "123",
+    "token": "eyJhbGciOiJIUzI1NiJ9.bWFyaw.2YkFGenimW3U7NJozbeuoK8A6RD5BmYKX3zBeeUFqH0"
   }
 ]
