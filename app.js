@@ -1,17 +1,15 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const session = require("cookie-session");
 const dotenv = require("dotenv");
 
-var app = express();
+const app = express();
 
 // get config vars
 dotenv.config();
-
-// access config var
-process.env.TOKEN_SECRET;
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -22,6 +20,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+const expiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+app.use(
+  session({
+    name: "session",
+    keys: ["key1", "key2"],
+    cookie: {
+      secure: false,
+      httpOnly: true,
+      path: "/user",
+      expires: expiry,
+    },
+  })
+);
 
 app.use("/", require("./routes"));
 
