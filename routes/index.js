@@ -21,8 +21,8 @@ router
 
     if (!username || !password) {
       console.log("incorrect username or password");
-      req.session.message = "Incorrect username or password";
-      res.redirect(400, "back");
+      req.session.message = "400: Bad Request. Incorrect username or password";
+      res.redirect("back");
     }
 
     // save user token
@@ -46,7 +46,7 @@ router
 
         console.log("registration successful");
         req.session.message = "Registration successful";
-        res.redirect(302, "/login");
+        res.redirect("/login");
       } else {
         const fileData = JSON.parse(data);
 
@@ -55,8 +55,8 @@ router
 
         if (object) {
           console.log("user already exists:", object);
-          req.session.message = "User already exists";
-          res.redirect(400, "back");
+          req.session.message = "400: Bad Request. User already exists";
+          res.redirect("back");
         } else {
           // add new user
           fileData.push(user);
@@ -69,7 +69,7 @@ router
 
           console.log("registration successful");
           req.session.message = "Registration successful";
-          res.redirect(302, "/login");
+          res.redirect("/login");
         }
       }
     });
@@ -87,8 +87,8 @@ router
 
     if (!username || !password) {
       console.log("incorrect username or password");
-      req.session.message = "Incorrect username or password";
-      res.redirect(400, "back");
+      req.session.message = "400: Bad Request. Incorrect username or password";
+      res.redirect("back");
     }
 
     fs.readFile(filePath, "utf8", (err, data) => {
@@ -104,14 +104,15 @@ router
 
         if (!object) {
           console.log("user not found");
-          req.session.message = "User not found";
-          res.redirect(400, "back");
+          req.session.message = "400: Bad Request. User not found";
+          res.redirect("back");
         } else {
           // compare passwords
           if (object.password != password) {
             console.log("incorrect password");
-            req.session.message = "Incorrect username or password";
-            res.redirect(400, "back");
+            req.session.message =
+              "400: Bad Request. Incorrect username or password";
+            res.redirect("back");
           } else {
             const { token } = object;
 
@@ -126,7 +127,7 @@ router
 
             console.log("user logged in");
             req.session.message = "User logged in";
-            res.redirect(302, "/user");
+            res.redirect("/user");
           }
         }
       }
@@ -138,7 +139,7 @@ router.get("/logout", function (req, res) {
   res.clearCookie();
 
   console.log(new Date(), `: user [${req.user}] logged out`);
-  res.redirect(302, "/login");
+  res.redirect("/login");
 });
 
 router.use("/user", authenticateToken, require("./users"));
@@ -149,13 +150,15 @@ function authenticateToken(req, res, next) {
   const token = authHeader ? authHeader.split(" ")[1] : req.cookies.token;
   if (token == null) {
     console.log("token not found");
-    res.redirect(401, "back");
+    req.session.message = "401: Unauthorized. Token not found";
+    res.redirect("back");
   }
 
   jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
     if (err) {
       console.log(err);
-      res.redirect(403, "back");
+      req.session.message = "403: Forbidden. Invalid token";
+      res.redirect("back");
     }
 
     req.user = user;
