@@ -1,10 +1,12 @@
 [
   {
-    "username": "matthew",
-    "password": "123"
+    "username": "luke",
+    "password": "123",
+    "token": "eyJhbGciOiJIUzI1NiJ9.bHVrZQ.WiHoUqgANIhAteHgEg_azrDl6R3SKh_p3gHPMDOAdoo"
   },
   {
     "username": "mark",
-    "password": "111"
+    "password": "123",
+    "token": "eyJhbGciOiJIUzI1NiJ9.bWFyaw.2YkFGenimW3U7NJozbeuoK8A6RD5BmYKX3zBeeUFqH0"
   }
 ]
